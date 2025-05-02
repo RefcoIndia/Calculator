@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tile Calculator - Refco India</title>
+  <style>
+    body { font-family: Arial; max-width: 800px; margin: auto; padding: 20px; }
+    label, select, input { display: block; margin: 10px 0; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .column { flex: 1; min-width: 180px; }
+    h2 { margin-top: 30px; }
+    .output { background: #f4f4f4; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Tile Calculator - Refco India</h1>
+
+  <div class="row">
+    <div class="column">
+      <label>Area (sq. ft):</label>
+      <input type="number" id="areaFt" oninput="convertArea('ft')">
+    </div>
+    <div class="column">
+      <label>Area (sq. m):</label>
+      <input type="number" id="areaM" oninput="convertArea('m')">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <label>Tile Size (L x B in mm):</label>
+      <input type="number" placeholder="Length" id="tileL">
+      <input type="number" placeholder="Breadth" id="tileB">
+    </div>
+    <div class="column">
+      <label>Primer:</label>
+      <select id="primer"><option>Yes</option><option>No</option></select>
+
+      <label>Coromastic:</label>
+      <select id="coromastic"><option>Yes</option><option>No</option></select>
+      <label>Thickness (mm):</label>
+      <select id="coroThick"></select>
+    </div>
+    <div class="column">
+      <label>Bedding:</label>
+      <select id="bedding">
+        <option>SK MORTAR</option>
+        <option>CUMIFURAN</option>
+        <option>COROPHEN</option>
+        <option>B-100</option>
+      </select>
+
+      <label>Jointing:</label>
+      <select id="jointing">
+        <option>CUMIFURAN</option>
+        <option>COROPHEN</option>
+        <option>B-100</option>
+      </select>
+    </div>
+  </div>
+
+  <button onclick="calculate()">Calculate</button>
+
+  <div id="results" class="output"></div>
+
+  <script>
+    // Populate thickness dropdown
+    for (let i = 1; i <= 30; i++) {
+      coroThick.innerHTML += `<option>${i}</option>`;
+    }
+
+    function convertArea(type) {
+      let ft = parseFloat(document.getElementById("areaFt").value) || 0;
+      let m = parseFloat(document.getElementById("areaM").value) || 0;
+      if (type === "ft") document.getElementById("areaM").value = (ft * 0.092903).toFixed(2);
+      if (type === "m") document.getElementById("areaFt").value = (m * 10.7639).toFixed(2);
+    }
+
+    function calculate() {
+      let areaM = parseFloat(document.getElementById("areaM").value) || 0;
+      let tileL = parseFloat(document.getElementById("tileL").value) || 0;
+      let tileB = parseFloat(document.getElementById("tileB").value) || 0;
+      let primer = document.getElementById("primer").value;
+      let coro = document.getElementById("coromastic").value;
+      let thick = parseInt(document.getElementById("coroThick").value);
+      let bedding = document.getElementById("bedding").value;
+      let jointing = document.getElementById("jointing").value;
+
+      let tileArea = (tileL / 1000) * (tileB / 1000);
+      let numTiles = tileArea ? (areaM / tileArea).toFixed(2) : 0;
+
+      let result = `
+        <h2>Results</h2>
+        <p><strong>Tiles Needed:</strong> ${numTiles}</p>
+        <p><strong>Prodorlac SPL:</strong> ${(areaM * 0.3).toFixed(2)} Ltr</p>
+      `;
+
+      if (coro === "Yes") {
+        result += `<p><strong>Coromastic:</strong> ${(thick * 2 * areaM).toFixed(2)} Kgs</p>`;
+      }
+
+      if (bedding === "SK MORTAR") {
+        result += `<p>SK MORTAR - Powder: ${(15 * areaM).toFixed(2)} kg, K Soln: ${(5 * areaM).toFixed(2)} kg</p>`;
+      } else if (bedding === "CUMIFURAN") {
+        result += `<p>CUMIFURAN - Powder: ${(12 * areaM).toFixed(2)} kg, Syrup: ${(4 * areaM).toFixed(2)} kg</p>`;
+      } else if (bedding === "COROPHEN") {
+        result += `<p>COROPHEN - Powder: ${(12 * areaM).toFixed(2)} kg, Syrup: ${(4 * areaM).toFixed(2)} kg</p>`;
+      } else if (bedding === "B-100") {
+        result += `<p>B-100 - Powder: ${(12 * areaM).toFixed(2)} kg, Syrup: ${(4 * areaM).toFixed(2)} kg, Hardener: ${(0.4 * areaM).toFixed(2)} kg</p>`;
+      }
+
+      if (jointing === "CUMIFURAN") {
+        result += `<p>CUMIFURAN (Jointing) - Powder: ${(2.25 * areaM).toFixed(2)} kg, Syrup: ${(0.75 * areaM).toFixed(2)} kg</p>`;
+      } else if (jointing === "COROPHEN") {
+        result += `<p>COROPHEN (Jointing) - Powder: ${(2.25 * areaM).toFixed(2)} kg, Syrup: ${(0.75 * areaM).toFixed(2)} kg</p>`;
+      } else if (jointing === "B-100") {
+        result += `<p>B-100 (Jointing) - Powder: ${(2.25 * areaM).toFixed(2)} kg, Syrup: ${(0.75 * areaM).toFixed(2)} kg, Hardener: ${(0.075 * areaM).toFixed(2)} kg</p>`;
+      }
+
+      document.getElementById("results").innerHTML = result;
+    }
+  </script>
+</body>
+</html>
