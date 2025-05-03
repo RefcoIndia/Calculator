@@ -83,9 +83,10 @@
       <option value="no">No</option>
       <option value="yes">Yes</option>
     </select>
-    <select id="coroThk" style="display: none">
-      ${[...Array(30).keys()].map(i => `<option value="${i+1}">${i+1} mm</option>`).join('')}
-    </select>
+    <select id="coromasticThickness" style="display:none;">
+  <option value="">Select thickness (mm)</option>
+  ${[...Array(30)].map((_, i) => `<option value="${i+1}">${i+1} mm</option>`).join('')}
+</select>
   </div>
 
   <div class="row">
