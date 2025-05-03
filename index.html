@@ -1,171 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REFCO INDIA CORPORATION</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            text-align: center;
-            background-color: #003366;
-            color: white;
-            padding: 20px 0;
-        }
-        header h1, header h2 {
-            margin: 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .section {
-            margin-bottom: 20px;
-        }
-        .section h3 {
-            margin-bottom: 10px;
-        }
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
-        }
-        .input-group label {
-            margin-bottom: 5px;
-        }
-        .input-group input, .input-group select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .output {
-            background-color: #e6f7ff;
-            padding: 15px;
-            border: 1px solid #b3d8ff;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #003366;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #00509e;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>REFCO INDIA CORPORATION - Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .inline-group {
+      display: flex;
+      gap: 10px;
+    }
+    .inline-group > * {
+      flex: 1;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>REFCO INDIA CORPORATION</h1>
-        <h2>ACID RESISTANT MATERIALS CALCULATIONS</h2>
-    </header>
-    <div class="container">
-        <!-- Area Input Section -->
-        <div class="section">
-            <h3>Area Input</h3>
-            <div class="input-group">
-                <label for="areaSqFt">Area in sq. ft:</label>
-                <input type="number" id="areaSqFt" placeholder="Enter area in sq. ft">
-            </div>
-            <div class="input-group">
-                <label for="areaSqM">Area in sq. m:</label>
-                <input type="number" id="areaSqM" placeholder="Enter area in sq. m">
-            </div>
-        </div>
-        <!-- Tile Size Section -->
-        <div class="section">
-            <h3>Tile Size</h3>
-            <div class="input-group">
-                <label for="tileLength">Length (mm):</label>
-                <input type="number" id="tileLength" placeholder="Enter length in mm">
-            </div>
-            <div class="input-group">
-                <label for="tileBreadth">Breadth (mm):</label>
-                <input type="number" id="tileBreadth" placeholder="Enter breadth in mm">
-            </div>
-            <div class="input-group">
-                <label for="tileThickness">Thickness (mm):</label>
-                <input type="number" id="tileThickness" placeholder="Enter thickness in mm">
-            </div>
-        </div>
-        <!-- Primer and Coromastic Section -->
-        <div class="section">
-            <h3>Primer and Coromastic</h3>
-            <div class="input-group">
-                <label for="primer">Primer Required:</label>
-                <select id="primer">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label for="coromastic">Coromastic Required:</label>
-                <select id="coromastic">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-            </div>
-            <div class="input-group" id="coromasticThicknessGroup" style="display: none;">
-                <label for="coromasticThickness">Coromastic Thickness (mm):</label>
-                <select id="coromasticThickness">
-                    <!-- Options 1-30 -->
-                    ${Array.from({ length: 30 }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
-                </select>
-            </div>
-        </div>
-        <!-- Bedding and Jointing Section -->
-        <div class="section">
-            <h3>Bedding and Jointing</h3>
-            <div class="input-group">
-                <label for="beddingType">Bedding Type:</label>
-                <select id="beddingType">
-                    <option value="SK Mortar">SK Mortar</option>
-                    <option value="Cumifuran">Cumifuran</option>
-                    <option value="Corophen">Corophen</option>
-                    <option value="B-100">B-100</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label for="jointingType">Jointing Type:</label>
-                <select id="jointingType">
-                    <option value="Cumifuran">Cumifuran</option>
-                    <option value="Corophen">Corophen</option>
-                    <option value="B-100">B-100</option>
-                </select>
-            </div>
-        </div>
-        <!-- Calculate Button -->
-        <div class="section">
-            <button id="calculateButton">Calculate</button>
-        </div>
-        <!-- Output Section -->
-        <div class="section output" id="outputSection" style="display: none;">
-            <h3>Results</h3>
-            <p id="outputText"></p>
-        </div>
-    </div>
-    <script>
-        document.getElementById('coromastic').addEventListener('change', function() {
-            const coromasticThicknessGroup = document.getElementById('coromasticThicknessGroup');
-            coromasticThicknessGroup.style.display = this.value === 'yes' ? 'block' : 'none';
-        });
+  <div class="container">
+    <h1>REFCO INDIA CORPORATION</h1>
+    <h2>ACID RESISTANT MATERIALS CALCULATIONS</h2>
 
-        document.getElementById('calculateButton').addEventListener('click', function() {
-            // Placeholder for calculation logic
-            alert('Calculations will be performed here.');
-        });
-    </script>
+    <div class="form-group inline-group">
+      <input type="number" id="areaSqFt" placeholder="Area (sq. ft)">
+      <input type="number" id="areaSqM" placeholder="Area (sq. m)">
+    </div>
+
+    <div class="form-group inline-group">
+      <input type="number" id="tileLength" placeholder="Length (mm)">
+      <input type="number" id="tileBreadth" placeholder="Breadth (mm)">
+      <input type="number" id="tileThickness" placeholder="Thickness (mm)">
+    </div>
+
+    <div class="form-group inline-group">
+      <select id="primer">
+        <option value="YES">YES</option>
+        <option value="NO">NO</option>
+      </select>
+      <select id="coromastic">
+        <option value="YES">YES</option>
+        <option value="NO">NO</option>
+      </select>
+      <select id="coromasticThickness">
+        <option value="">--SELECT--</option>
+      </select>
+    </div>
+
+    <div class="form-group inline-group">
+      <select id="bedding">
+        <option>SK MORTAR</option>
+        <option>CUMIFURAN</option>
+        <option>COROPHEN</option>
+        <option>B-100</option>
+      </select>
+      <select id="jointing">
+        <option>SK MORTAR</option>
+        <option>CUMIFURAN</option>
+        <option>COROPHEN</option>
+        <option>B-100</option>
+      </select>
+    </div>
+
+    <button onclick="calculate()">CALCULATE</button>
+
+    <table id="resultTable" style="display: none;">
+      <thead>
+        <tr>
+          <th>S. NO</th>
+          <th>ITEM NAME</th>
+          <th>QTY</th>
+          <th>UOM</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    // Coromastic Thickness Dropdown Options
+    const coromasticThickness = document.getElementById('coromasticThickness');
+    for (let i = 1; i <= 30; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.text = i + " mm";
+      coromasticThickness.appendChild(option);
+    }
+
+    // Area bi-directional logic
+    const areaSqFt = document.getElementById('areaSqFt');
+    const areaSqM = document.getElementById('areaSqM');
+    let lock = false;
+
+    areaSqFt.addEventListener('input', () => {
+      if (lock) return;
+      lock = true;
+      areaSqM.value = (areaSqFt.value * 0.092903).toFixed(2);
+      lock = false;
+    });
+
+    areaSqM.addEventListener('input', () => {
+      if (lock) return;
+      lock = true;
+      areaSqFt.value = (areaSqM.value / 0.092903).toFixed(2);
+      lock = false;
+    });
+
+    function calculate() {
+      const primer = document.getElementById('primer').value;
+      const coromastic = document.getElementById('coromastic').value;
+      const coromasticThk = document.getElementById('coromasticThickness').value;
+      const bedding = document.getElementById('bedding').value;
+      const jointing = document.getElementById('jointing').value;
+      const results = [];
+
+      let index = 1;
+
+      if (primer === 'YES') {
+        results.push({ name: 'PRODORLAC SPL', qty: 0.3, uom: 'LTR' });
+      }
+
+      if (coromastic === 'YES' && coromasticThk) {
+        results.push({ name: 'COROMASTIC', qty: Number(coromasticThk), uom: 'KGS' });
+      }
+
+      if (bedding === 'COROPHEN') {
+        results.push({ name: 'COROPHEN POWDER', qty: 2.25, uom: 'KG' });
+        results.push({ name: 'COROPHEN SYRUP', qty: 0.75, uom: 'KG' });
+      }
+
+      const tableBody = document.querySelector('#resultTable tbody');
+      tableBody.innerHTML = '';
+      results.forEach((item, i) => {
+        const row = `<tr><td>${i + 1}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.uom}</td></tr>`;
+        tableBody.innerHTML += row;
+      });
+
+      document.getElementById('resultTable').style.display = results.length ? 'table' : 'none';
+    }
+  </script>
 </body>
 </html>
