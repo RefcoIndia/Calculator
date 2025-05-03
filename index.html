@@ -162,22 +162,25 @@
       const sortedSizes = packingSizes.sort((a, b) => b - a);
       let remainingQty = qty;
       let description = "";
+      let adjustedQty = 0;
 
       sortedSizes.forEach(size => {
         const count = Math.floor(remainingQty / size);
         if (count > 0) {
           description += `${count} ${size > 1 ? 'DRUMS' : 'DRUM'} OF ${size} ${size > 1 ? 'KGS' : 'LTRS'}, `;
+          adjustedQty += count * size;
           remainingQty %= size;
         }
       });
 
       if (remainingQty > 0) {
         description += `1 DRUM OF ${remainingQty} ${remainingQty > 1 ? 'KGS' : 'LTRS'}`;
+        adjustedQty += remainingQty;
       } else {
         description = description.slice(0, -2);
       }
 
-      return { adjustedQty: qty, description };
+      return { adjustedQty, description };
     }
 
     function calculate() {
@@ -199,7 +202,9 @@
       results.push([serial++, "Number of Tiles", noOfTiles, "Nos", "-", "-"]);
       if (primer) results.push([serial++, "PRODORLAC SPL", (areaM * 0.3).toFixed(2), "LTR", "-", "-"]);
       if (coromastic && coromasticThk > 0) {
-        results.push([serial++, "COROMASTIC", (areaM * coromasticThk * 2).toFixed(2), "KGS", "-", "-"]);
+        const qty = (areaM * coromasticThk * 2).toFixed(2);
+        const adjusted = calculateAdjustedQty("COROMASTIC", qty);
+        results.push([serial++, "COROMASTIC", qty, "KGS", adjusted.adjustedQty, adjusted.description]);
       }
 
       const addItem = (name, qty, uom) => {
