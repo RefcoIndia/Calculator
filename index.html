@@ -131,10 +131,17 @@
       sqft.value = (sqm.value * 10.7639).toFixed(3);
     });
 
-    function toggleCoroThk() {
-      const coro = document.getElementById('coromastic').value;
-      document.getElementById('coroThk').style.display = coro === 'yes' ? 'inline' : 'none';
-    }
+<select id="coromasticToggle" onchange="toggleCoromastic()">
+  <option value="No">No</option>
+  <option value="Yes">Yes</option>
+</select>
+
+<script>
+  function toggleCoromastic() {
+    const show = document.getElementById('coromasticToggle').value === 'Yes';
+    document.getElementById('coromasticThickness').style.display = show ? 'inline-block' : 'none';
+  }
+</script>
 
     function calculate() {
       const area = parseFloat(document.getElementById('sqm').value);
