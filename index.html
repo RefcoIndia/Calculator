@@ -3,71 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Refco India Corporation - Tile Calculator</title>
+  <title>Refco India Calculator</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
       margin: 0;
       padding: 20px;
-      color: #333;
     }
-
     .container {
       max-width: 800px;
       margin: auto;
-      padding: 2rem;
-      background-color: #ffffff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background: white;
+      padding: 30px;
       border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-
     h1, h2 {
       text-align: center;
-      margin: 0.5rem 0;
+      text-transform: uppercase;
     }
-
-    form {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
     label {
       display: block;
-      margin-bottom: 5px;
-      font-weight: 500;
+      margin-top: 15px;
+      font-weight: bold;
+      text-transform: uppercase;
     }
-
-    input[type="number"], select {
+    input, select {
       width: 100%;
       padding: 8px;
-      border: 1px solid #ccc;
+      margin-top: 5px;
       border-radius: 5px;
-      box-sizing: border-box;
+      border: 1px solid #ccc;
     }
-
-    .full-width {
-      grid-column: span 2;
-    }
-
-    #calculate {
-      grid-column: span 2;
-      padding: 10px;
-      background-color: #0078D7;
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
       color: white;
       border: none;
       border-radius: 5px;
-      font-size: 1rem;
+      font-size: 16px;
       cursor: pointer;
     }
-
-    #results {
-      margin-top: 2rem;
-      background-color: #f1f1f1;
-      padding: 1rem;
-      border-radius: 8px;
+    button:hover {
+      background-color: #0056b3;
+    }
+    .results {
+      background-color: #eee;
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 5px;
+    }
+    .results table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .results th, .results td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+      text-transform: uppercase;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
@@ -76,104 +76,116 @@
     <h1>REFCO INDIA CORPORATION</h1>
     <h2>ACID RESISTANT MATERIALS CALCULATIONS</h2>
 
-    <form id="tileForm">
-      <div>
-        <label>Area (sq. ft):</label>
-        <input type="number" id="areaSqft" step="0.01">
-      </div>
-      <div>
-        <label>Area (sq. m):</label>
-        <input type="number" id="areaSqm" step="0.01">
-      </div>
+    <label>Area (sq. ft):</label>
+    <input type="number" id="areaSqft" oninput="convertToSqm()" />
 
-      <div class="full-width">
-        <label>TILE SIZE - BOX L X BOX B X BOX THK. (MM):</label>
-        <input type="number" placeholder="Length" id="length" style="width: 30%; display: inline-block;">
-        <input type="number" placeholder="Breadth" id="breadth" style="width: 30%; display: inline-block; margin-left: 5px;">
-        <input type="number" placeholder="Thickness" id="thickness" style="width: 30%; display: inline-block; margin-left: 5px;">
-      </div>
+    <label>Area (sq. m):</label>
+    <input type="number" id="areaSqm" oninput="convertToSqft()" />
 
-      <div>
-        <label>PRIMER REQUIRED:</label>
-        <select id="primer">
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select>
-      </div>
+    <label>Tile Size - BOX L X BOX B X BOX THK. (MM):</label>
+    <input type="number" id="tileLength" placeholder="Length (mm)" />
+    <input type="number" id="tileBreadth" placeholder="Breadth (mm)" />
+    <input type="number" id="tileThickness" placeholder="Thickness (mm)" />
 
-      <div>
-        <label>COROMASTIC REQUIRED:</label>
-        <select id="coromastic">
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select>
-      </div>
+    <label>Primer Required:</label>
+    <select id="primer">
+      <option>Yes</option>
+      <option>No</option>
+    </select>
 
-      <div class="full-width" id="coromasticThicknessContainer" style="display: none;">
-        <label>Coromastic Thickness (mm):</label>
-        <input type="number" id="coromasticThickness" min="1" max="30">
-      </div>
+    <label>Coromastic Required:</label>
+    <select id="coromastic" onchange="toggleThickness()">
+      <option>Yes</option>
+      <option>No</option>
+    </select>
+    <select id="coromasticThickness" class="hidden">
+      ${[...Array(30).keys()].map(i => `<option>${i+1}</option>`).join('')}
+    </select>
 
-      <div>
-        <label>BEDDING:</label>
-        <select id="bedding">
-          <option value="SK MORTAR">SK MORTAR</option>
-          <option value="EPOXY BEDDING">EPOXY BEDDING</option>
-        </select>
-      </div>
+    <label>Bedding:</label>
+    <select id="bedding">
+      <option>SK MORTAR</option>
+      <option>CUMIFURAN</option>
+      <option>COROPHEN</option>
+      <option>B-100</option>
+    </select>
 
-      <div>
-        <label>JOINTING:</label>
-        <select id="jointing">
-          <option value="CUMIFURAN">CUMIFURAN</option>
-          <option value="OTHER">OTHER</option>
-        </select>
-      </div>
+    <label>Jointing:</label>
+    <select id="jointing">
+      <option>SK MORTAR</option>
+      <option>CUMIFURAN</option>
+      <option>COROPHEN</option>
+      <option>B-100</option>
+    </select>
 
-      <button type="button" id="calculate">Calculate</button>
-    </form>
+    <button onclick="calculate()">Calculate</button>
 
-    <div id="results"></div>
+    <div class="results" id="results"></div>
   </div>
 
   <script>
-    document.getElementById('coromastic').addEventListener('change', function () {
-      const show = this.value === 'yes';
-      document.getElementById('coromasticThicknessContainer').style.display = show ? 'block' : 'none';
-    });
+    function convertToSqm() {
+      const sqft = parseFloat(document.getElementById('areaSqft').value) || 0;
+      document.getElementById('areaSqm').value = (sqft * 0.092903).toFixed(2);
+    }
 
-    document.getElementById('calculate').addEventListener('click', function () {
-      const areaSqm = parseFloat(document.getElementById('areaSqm').value) || 0;
-      const length = parseFloat(document.getElementById('length').value) || 0;
-      const breadth = parseFloat(document.getElementById('breadth').value) || 0;
+    function convertToSqft() {
+      const sqm = parseFloat(document.getElementById('areaSqm').value) || 0;
+      document.getElementById('areaSqft').value = (sqm / 0.092903).toFixed(2);
+    }
 
-      const tileAreaSqm = (length * breadth) / 1000000;
-      const tilesNeeded = tileAreaSqm > 0 ? (areaSqm / tileAreaSqm).toFixed(2) : '0';
+    function toggleThickness() {
+      const coromastic = document.getElementById('coromastic').value;
+      document.getElementById('coromasticThickness').classList.toggle('hidden', coromastic !== 'Yes');
+    }
 
-      let result = `<h3>Results</h3>`;
-      result += `<p><strong>Tiles Needed:</strong> ${tilesNeeded}</p>`;
-
-      if (document.getElementById('primer').value === 'yes') {
-        result += `<p><strong>Prodorlac SPL:</strong> ${(areaSqm * 0.3).toFixed(2)} Ltr</p>`;
-      }
-
-      if (document.getElementById('coromastic').value === 'yes') {
-        const coroThk = parseFloat(document.getElementById('coromasticThickness').value) || 0;
-        result += `<p><strong>Coromastic:</strong> ${(areaSqm * coroThk * 2).toFixed(2)} Kgs</p>`;
-      }
-
+    function calculate() {
+      const sqm = parseFloat(document.getElementById('areaSqm').value) || 0;
+      const primer = document.getElementById('primer').value;
+      const coromastic = document.getElementById('coromastic').value;
+      const thickness = coromastic === 'Yes' ? parseInt(document.getElementById('coromasticThickness').value) : 0;
       const bedding = document.getElementById('bedding').value;
-      if (bedding === 'SK MORTAR') {
-        result += `<p><strong>SK MORTAR:</strong> Powder: ${(areaSqm * 15).toFixed(2)} kg, K Soln: ${(areaSqm * 5).toFixed(2)} kg</p>`;
-      }
-
       const jointing = document.getElementById('jointing').value;
-      if (jointing === 'CUMIFURAN') {
-        result += `<p><strong>CUMIFURAN (Jointing):</strong> Powder: ${(areaSqm * 2.25).toFixed(2)} kg, Syrup: ${(areaSqm * 0.75).toFixed(2)} kg</p>`;
+
+      const resultLines = [];
+      let sno = 1;
+
+      if (primer === 'Yes') {
+        resultLines.push(`<tr><td>${sno++}</td><td>PRODORLAC SPL</td><td>${(sqm * 0.3).toFixed(2)}</td><td>LTR</td></tr>`);
+      }
+      if (coromastic === 'Yes') {
+        resultLines.push(`<tr><td>${sno++}</td><td>COROMASTIC</td><td>${(sqm * thickness * 0.2).toFixed(2)}</td><td>KGS</td></tr>`);
       }
 
-      document.getElementById('results').innerHTML = result;
-    });
+      const materialMap = {
+        'SK MORTAR': [['CEMENT PRODOR S POWDER', 15], ['CEMENT PRODOR K SOLUTION', 5]],
+        'CUMIFURAN': [['CUMIFURAN POWDER', 2.25], ['CUMIFURAN SYRUP', 0.75]],
+        'COROPHEN': [['COROPHEN POWDER', 2.25], ['COROPHEN SYRUP', 0.75]],
+        'B-100': [['B-100 POWDER', 2.25], ['B-100 SYRUP', 0.75], ['B-100 HARDENER', 0.3]],
+      };
+
+      const combined = bedding === jointing;
+      const types = combined ? [bedding] : [bedding, jointing];
+
+      const items = {};
+      types.forEach(type => {
+        materialMap[type].forEach(([name, rate]) => {
+          items[name] = (items[name] || 0) + (rate * sqm);
+        });
+      });
+
+      for (const [name, qty] of Object.entries(items)) {
+        resultLines.push(`<tr><td>${sno++}</td><td>${name}</td><td>${qty.toFixed(2)}</td><td>KG</td></tr>`);
+      }
+
+      document.getElementById('results').innerHTML = `
+        <h3>RESULTS</h3>
+        <table>
+          <tr><th>S. NO</th><th>ITEM NAME</th><th>QTY</th><th>UOM</th></tr>
+          ${resultLines.join('')}
+        </table>
+      `;
+    }
   </script>
 </body>
 </html>
