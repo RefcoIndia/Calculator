@@ -2,53 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>REFCO INDIA CORPORATION</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
+      margin: 20px;
       background-color: #f8f9fa;
       color: #333;
     }
+
     h1, h2 {
       text-align: center;
-      color: #2c3e50;
     }
+
     .row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       align-items: center;
+      justify-content: center;
     }
-    .row label {
-      min-width: 150px;
+
+    .row label, .row input, .row select {
+      margin: 5px;
     }
+
     input, select {
       padding: 5px;
-      font-size: 16px;
+      font-size: 14px;
     }
-    .toggle {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      background: #fff;
+      background-color: white;
     }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
+
     th, td {
-      padding: 10px;
+      border: 1px solid #ccc;
+      padding: 8px;
       text-align: center;
     }
+
     th {
-      background-color: #f1f1f1;
+      background-color: #dee2e6;
+    }
+
+    button {
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -56,175 +62,170 @@
   <h1>REFCO INDIA CORPORATION</h1>
   <h2>ACID RESISTANT MATERIALS CALCULATIONS</h2>
 
+  <!-- Input Section -->
   <div class="row">
-    <label>Area (sq. ft):</label>
-    <input type="number" id="sqft" />
-    <label>Area (sq. m):</label>
-    <input type="number" id="sqm" />
+    <label>Area (sq. ft): <input id="areaFt" type="number" step="any"></label>
+    <label>Area (sq. m): <input id="areaM" type="number" step="any"></label>
+    <label>Tile Length (mm): <input id="tileLength" type="number" value="300"></label>
+    <label>Width (mm): <input id="tileWidth" type="number" value="300"></label>
+    <label>Thickness (mm): <input id="tileThk" type="number" value="20"></label>
   </div>
 
   <div class="row">
-    <label>Tile Length (mm):</label>
-    <input type="number" id="tileLength" />
-    <label>Width (mm):</label>
-    <input type="number" id="tileWidth" />
-    <label>Thickness (mm):</label>
-    <input type="number" id="tileThickness" />
+    <label>Primer:
+      <select id="primer">
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </label>
+
+    <label>Coromastic:
+      <select id="coromasticToggle" onchange="toggleCoromastic()">
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+    </label>
+
+    <label>
+      <select id="coromasticThickness" style="display:none;">
+        <option value="">Select thickness (mm)</option>
+        ${[...Array(30)].map((_, i) => `<option value="${i+1}">${i+1} mm</option>`).join('')}
+      </select>
+    </label>
+
+    <label>Bedding:
+      <select id="bedding">
+        <option value="SK Mortar">SK Mortar</option>
+        <option value="Cumifuran">Cumifuran</option>
+        <option value="Corophen">Corophen</option>
+        <option value="B-100">B-100</option>
+      </select>
+    </label>
+
+    <label>Jointing:
+      <select id="jointing">
+        <option value="Cumifuran">Cumifuran</option>
+        <option value="Corophen">Corophen</option>
+        <option value="B-100">B-100</option>
+      </select>
+    </label>
   </div>
 
   <div class="row">
-    <label>Primer:</label>
-    <select id="primer">
-      <option value="yes">Yes</option>
-      <option value="no">No</option>
-    </select>
-    <label>Coromastic:</label>
-    <select id="coromastic" onchange="toggleCoroThk()">
-      <option value="no">No</option>
-      <option value="yes">Yes</option>
-    </select>
-    <select id="coromasticThickness" style="display:none;">
-  <option value="">Select thickness (mm)</option>
-  ${[...Array(30)].map((_, i) => `<option value="${i+1}">${i+1} mm</option>`).join('')}
-</select>
+    <button onclick="calculate()">Calculate</button>
   </div>
 
-  <div class="row">
-    <label>Bedding:</label>
-    <select id="bedding">
-      <option value="SK Mortar">SK Mortar</option>
-      <option value="Cumifuran">Cumifuran</option>
-      <option value="Corophen">Corophen</option>
-      <option value="B-100">B-100</option>
-    </select>
-    <label>Jointing:</label>
-    <select id="jointing">
-      <option value="Cumifuran">Cumifuran</option>
-      <option value="Corophen">Corophen</option>
-      <option value="B-100">B-100</option>
-    </select>
-  </div>
-
-  <button onclick="calculate()">Calculate</button>
-
-  <table id="results">
+  <!-- Output Table -->
+  <table id="resultTable">
     <thead>
       <tr>
         <th>S. NO</th>
         <th>ITEM NAME</th>
         <th>QTY</th>
         <th>UOM</th>
-        <th></th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
   <script>
-    const sqft = document.getElementById('sqft');
-    const sqm = document.getElementById('sqm');
-    
-    sqft.addEventListener('input', () => {
-      sqm.value = (sqft.value * 0.092903).toFixed(3);
+    // Auto conversion between area ft² and m²
+    document.getElementById('areaFt').addEventListener('input', function () {
+      document.getElementById('areaM').value = (this.value * 0.092903).toFixed(3);
     });
-    sqm.addEventListener('input', () => {
-      sqft.value = (sqm.value * 10.7639).toFixed(3);
+    document.getElementById('areaM').addEventListener('input', function () {
+      document.getElementById('areaFt').value = (this.value * 10.7639).toFixed(3);
     });
 
-<select id="coromasticToggle" onchange="toggleCoromastic()">
-  <option value="No">No</option>
-  <option value="Yes">Yes</option>
-</select>
-
-<script>
-  function toggleCoromastic() {
-    const show = document.getElementById('coromasticToggle').value === 'Yes';
-    document.getElementById('coromasticThickness').style.display = show ? 'inline-block' : 'none';
-  }
-</script>
+    function toggleCoromastic() {
+      const show = document.getElementById('coromasticToggle').value === 'Yes';
+      document.getElementById('coromasticThickness').style.display = show ? 'inline-block' : 'none';
+    }
 
     function calculate() {
-      const area = parseFloat(document.getElementById('sqm').value);
-      const L = parseFloat(document.getElementById('tileLength').value);
-      const B = parseFloat(document.getElementById('tileWidth').value);
-      const primer = document.getElementById('primer').value === 'yes';
-      const coro = document.getElementById('coromastic').value === 'yes';
-      const coroThk = parseInt(document.getElementById('coroThk').value || 0);
+      const areaM = parseFloat(document.getElementById('areaM').value) || 0;
+      const L = parseFloat(document.getElementById('tileLength').value) || 1;
+      const B = parseFloat(document.getElementById('tileWidth').value) || 1;
+
+      const primer = document.getElementById('primer').value;
+      const coromastic = document.getElementById('coromasticToggle').value;
+      const coromasticThk = parseInt(document.getElementById('coromasticThickness').value) || 0;
       const bedding = document.getElementById('bedding').value;
       const jointing = document.getElementById('jointing').value;
 
-      const tileArea = (L * B) / 1e6; // in sq. m
-      const noOfTiles = Math.ceil(area / tileArea);
+      const tileArea = (L * B) / 1000000;
+      const noOfTiles = Math.ceil(areaM / tileArea);
+      const tableBody = document.querySelector('#resultTable tbody');
+      tableBody.innerHTML = '';
 
-      let results = [];
-      let sno = 1;
-
-      results.push([sno++, "Number of Tiles", noOfTiles, "Nos"]);
-      if (primer) results.push([sno++, "PRODORLAC SPL", (0.3 * area).toFixed(2), "LTR"]);
-      if (coro) results.push([sno++, "COROMASTIC", (2 * coroThk * area).toFixed(2), "KGS"]);
-
-      const materials = {
-        'SK Mortar': [
-          ["CEMENT PRODOR S POWDER", 15],
-          ["CEMENT PRODOR K SOLUTION", 5],
-        ],
-        'Cumifuran': [
-          ["CUMIFURAN POWDER", 12],
-          ["CUMIFURAN SYRUP", 4],
-        ],
-        'Corophen': [
-          ["COROPHEN POWDER", 12],
-          ["COROPHEN SYRUP", 4],
-        ],
-        'B-100': [
-          ["B-100 POWDER", 12],
-          ["B-100 SYRUP", 4],
-          ["B-100 HARDENER", 0.4],
-        ]
+      let sn = 1;
+      const addRow = (item, qty, uom) => {
+        tableBody.innerHTML += `
+          <tr>
+            <td>${sn++}</td>
+            <td>${item}</td>
+            <td>${qty.toFixed(2)}</td>
+            <td>${uom}</td>
+          </tr>`;
       };
 
-      const jointingMaterials = {
-        'Cumifuran': [
-          ["CUMIFURAN POWDER", 2.25],
-          ["CUMIFURAN SYRUP", 0.75],
-        ],
-        'Corophen': [
-          ["COROPHEN POWDER", 2.25],
-          ["COROPHEN SYRUP", 0.75],
-        ],
-        'B-100': [
-          ["B-100 POWDER", 2.25],
-          ["B-100 SYRUP", 0.75],
-          ["B-100 HARDENER", 0.075],
-        ]
+      addRow('Number of Tiles', noOfTiles, 'Nos');
+
+      if (primer === 'Yes') {
+        addRow('PRODORLAC SPL', 0.3 * areaM, 'LTR');
+      }
+
+      if (coromastic === 'Yes' && coromasticThk > 0) {
+        addRow('COROMASTIC', coromasticThk * 2 * areaM, 'KGS');
+      }
+
+      const addBedding = (type) => {
+        switch (type) {
+          case 'SK Mortar':
+            addRow('CEMENT PRODOR S POWDER', 15 * areaM, 'KG');
+            addRow('CEMENT PRODOR K SOLUTION', 5 * areaM, 'KG');
+            break;
+          case 'Cumifuran':
+            addRow('CUMIFURAN POWDER', 12 * areaM, 'KG');
+            addRow('CUMIFURAN SYRUP', 4 * areaM, 'KG');
+            break;
+          case 'Corophen':
+            addRow('COROPHEN POWDER', 12 * areaM, 'KG');
+            addRow('COROPHEN SYRUP', 4 * areaM, 'KG');
+            break;
+          case 'B-100':
+            addRow('B-100 POWDER', 12 * areaM, 'KG');
+            addRow('B-100 SYRUP', 4 * areaM, 'KG');
+            addRow('B-100 HARDENER', 0.4 * areaM, 'KG');
+            break;
+        }
       };
 
-      const combined = {};
+      const addJointing = (type) => {
+        switch (type) {
+          case 'Cumifuran':
+            addRow('CUMIFURAN POWDER', 2.25 * areaM, 'KG');
+            addRow('CUMIFURAN SYRUP', 0.75 * areaM, 'KG');
+            break;
+          case 'Corophen':
+            addRow('COROPHEN POWDER', 2.25 * areaM, 'KG');
+            addRow('COROPHEN SYRUP', 0.75 * areaM, 'KG');
+            break;
+          case 'B-100':
+            addRow('B-100 POWDER', 2.25 * areaM, 'KG');
+            addRow('B-100 SYRUP', 0.75 * areaM, 'KG');
+            addRow('B-100 HARDENER', 0.075 * areaM, 'KG');
+            break;
+        }
+      };
 
-      materials[bedding].forEach(([name, val]) => {
-        combined[name] = (combined[name] || 0) + val * area;
-      });
-
-      jointingMaterials[jointing].forEach(([name, val]) => {
-        combined[name] = (combined[name] || 0) + val * area;
-      });
-
-      Object.entries(combined).forEach(([name, qty]) => {
-        results.push([sno++, name, qty.toFixed(2), "KG"]);
-      });
-
-      const tbody = document.querySelector('#results tbody');
-      tbody.innerHTML = '';
-      results.forEach(row => {
-        const tr = document.createElement('tr');
-        row.forEach(cell => {
-          const td = document.createElement('td');
-          td.textContent = cell;
-          tr.appendChild(td);
-        });
-        tr.appendChild(document.createElement('td'));
-        tbody.appendChild(tr);
-      });
+      if (bedding === jointing) {
+        addBedding(bedding);
+        addJointing(jointing);
+      } else {
+        addBedding(bedding);
+        addJointing(jointing);
+      }
     }
   </script>
 </body>
