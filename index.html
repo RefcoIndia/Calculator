@@ -1,149 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Refco India Calculator</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background-color: #f5f5f5;
-    }
-    .container {
-      max-width: 700px;
-      background-color: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      margin-top: 40px;
-    }
-    h1, h2 {
-      text-align: center;
-      font-weight: bold;
-    }
-    .form-label {
-      font-weight: bold;
-    }
-    .results-table th, .results-table td {
-      text-transform: uppercase;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REFCO INDIA CORPORATION</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            text-align: center;
+            background-color: #003366;
+            color: white;
+            padding: 20px 0;
+        }
+        header h1, header h2 {
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            margin-bottom: 10px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            margin-bottom: 5px;
+        }
+        .input-group input, .input-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .output {
+            background-color: #e6f7ff;
+            padding: 15px;
+            border: 1px solid #b3d8ff;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #003366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00509e;
+        }
+    </style>
 </head>
-
 <body>
-  <div class="container">
-    <h1>REFCO INDIA CORPORATION</h1>
-    <h2>ACID RESISTANT MATERIALS CALCULATIONS</h2>
-
-    <form id="calcForm">
-      <!-- LINE 1 -->
-      <div class="row mb-3">
-        <div class="col">
-          <label class="form-label">AREA (SQ. FT):</label>
-          <input type="number" class="form-control" id="areaSqft">
+    <header>
+        <h1>REFCO INDIA CORPORATION</h1>
+        <h2>ACID RESISTANT MATERIALS CALCULATIONS</h2>
+    </header>
+    <div class="container">
+        <!-- Area Input Section -->
+        <div class="section">
+            <h3>Area Input</h3>
+            <div class="input-group">
+                <label for="areaSqFt">Area in sq. ft:</label>
+                <input type="number" id="areaSqFt" placeholder="Enter area in sq. ft">
+            </div>
+            <div class="input-group">
+                <label for="areaSqM">Area in sq. m:</label>
+                <input type="number" id="areaSqM" placeholder="Enter area in sq. m">
+            </div>
         </div>
-        <div class="col">
-          <label class="form-label">AREA (SQ. M):</label>
-          <input type="number" class="form-control" id="areaSqm">
+        <!-- Tile Size Section -->
+        <div class="section">
+            <h3>Tile Size</h3>
+            <div class="input-group">
+                <label for="tileLength">Length (mm):</label>
+                <input type="number" id="tileLength" placeholder="Enter length in mm">
+            </div>
+            <div class="input-group">
+                <label for="tileBreadth">Breadth (mm):</label>
+                <input type="number" id="tileBreadth" placeholder="Enter breadth in mm">
+            </div>
+            <div class="input-group">
+                <label for="tileThickness">Thickness (mm):</label>
+                <input type="number" id="tileThickness" placeholder="Enter thickness in mm">
+            </div>
         </div>
-      </div>
-
-      <!-- LINE 2 -->
-      <div class="row mb-3">
-        <label class="form-label">TILE SIZE - L X B X THK. (MM):</label>
-        <div class="col">
-          <input type="number" class="form-control" placeholder="Length (mm)" id="tileLength">
+        <!-- Primer and Coromastic Section -->
+        <div class="section">
+            <h3>Primer and Coromastic</h3>
+            <div class="input-group">
+                <label for="primer">Primer Required:</label>
+                <select id="primer">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="coromastic">Coromastic Required:</label>
+                <select id="coromastic">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="input-group" id="coromasticThicknessGroup" style="display: none;">
+                <label for="coromasticThickness">Coromastic Thickness (mm):</label>
+                <select id="coromasticThickness">
+                    <!-- Options 1-30 -->
+                    ${Array.from({ length: 30 }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+                </select>
+            </div>
         </div>
-        <div class="col">
-          <input type="number" class="form-control" placeholder="Breadth (mm)" id="tileBreadth">
+        <!-- Bedding and Jointing Section -->
+        <div class="section">
+            <h3>Bedding and Jointing</h3>
+            <div class="input-group">
+                <label for="beddingType">Bedding Type:</label>
+                <select id="beddingType">
+                    <option value="SK Mortar">SK Mortar</option>
+                    <option value="Cumifuran">Cumifuran</option>
+                    <option value="Corophen">Corophen</option>
+                    <option value="B-100">B-100</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="jointingType">Jointing Type:</label>
+                <select id="jointingType">
+                    <option value="Cumifuran">Cumifuran</option>
+                    <option value="Corophen">Corophen</option>
+                    <option value="B-100">B-100</option>
+                </select>
+            </div>
         </div>
-        <div class="col">
-          <input type="number" class="form-control" placeholder="Thickness (mm)" id="tileThickness">
+        <!-- Calculate Button -->
+        <div class="section">
+            <button id="calculateButton">Calculate</button>
         </div>
-      </div>
-
-      <!-- LINE 3 -->
-      <div class="row mb-3">
-        <div class="col">
-          <label class="form-label">PRIMER REQUIRED:</label>
-          <select class="form-select" id="primer">
-            <option>YES</option>
-            <option>NO</option>
-          </select>
+        <!-- Output Section -->
+        <div class="section output" id="outputSection" style="display: none;">
+            <h3>Results</h3>
+            <p id="outputText"></p>
         </div>
-        <div class="col">
-          <label class="form-label">COROMASTIC REQUIRED:</label>
-          <select class="form-select" id="coromastic">
-            <option>YES</option>
-            <option>NO</option>
-          </select>
-        </div>
-        <div class="col">
-          <label class="form-label">COROMASTIC THICKNESS (MM):</label>
-          <select class="form-select" id="coromasticThickness">
-            <option value="">--SELECT--</option>
-            <!-- OPTIONS 1 TO 30 -->
-            ${Array.from({length: 30}, (_, i) => `<option>${i + 1}</option>`).join('')}
-          </select>
-        </div>
-      </div>
-
-      <!-- BEDDING AND JOINTING -->
-      <div class="row mb-4">
-        <div class="col">
-          <label class="form-label">BEDDING:</label>
-          <select class="form-select" id="bedding">
-            <option>SK MORTAR</option>
-            <option>CUMIFURAN</option>
-            <option>COROPHEN</option>
-            <option>B-100</option>
-          </select>
-        </div>
-        <div class="col">
-          <label class="form-label">JOINTING:</label>
-          <select class="form-select" id="jointing">
-            <option>SK MORTAR</option>
-            <option>CUMIFURAN</option>
-            <option>COROPHEN</option>
-            <option>B-100</option>
-          </select>
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-primary w-100">CALCULATE</button>
-    </form>
-
-    <div id="results" class="mt-5">
-      <h4>RESULTS</h4>
-      <table class="table table-bordered results-table">
-        <thead>
-          <tr>
-            <th>S. NO</th>
-            <th>ITEM NAME</th>
-            <th>QTY</th>
-            <th>UOM</th>
-          </tr>
-        </thead>
-        <tbody id="resultBody">
-          <!-- RESULTS TO BE INJECTED HERE -->
-        </tbody>
-      </table>
     </div>
-  </div>
+    <script>
+        document.getElementById('coromastic').addEventListener('change', function() {
+            const coromasticThicknessGroup = document.getElementById('coromasticThicknessGroup');
+            coromasticThicknessGroup.style.display = this.value === 'yes' ? 'block' : 'none';
+        });
 
-  <script>
-    // Placeholder for calculate function
-    document.getElementById('calcForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const resultBody = document.getElementById('resultBody');
-      resultBody.innerHTML = `
-        <tr><td>1</td><td>PRODORLAC SPL</td><td>0.30</td><td>LTR</td></tr>
-        <tr><td>2</td><td>COROMASTIC</td><td>0.50</td><td>KGS</td></tr>
-        <tr><td>3</td><td>COROPHEN POWDER</td><td>2.25</td><td>KG</td></tr>
-        <tr><td>4</td><td>COROPHEN SYRUP</td><td>0.75</td><td>KG</td></tr>
-      `;
-    });
-  </script>
+        document.getElementById('calculateButton').addEventListener('click', function() {
+            // Placeholder for calculation logic
+            alert('Calculations will be performed here.');
+        });
+    </script>
 </body>
 </html>
