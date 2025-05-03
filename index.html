@@ -118,8 +118,6 @@
           <th>ITEM NAME</th>
           <th>QTY</th>
           <th>UOM</th>
-          <th>ADJUSTED QTY</th>
-          <th>QUANTITY DESCRIPTION</th>
         </tr>
       </thead>
       <tbody id="resultTable"></tbody>
@@ -127,20 +125,6 @@
   </div>
 
   <script>
-    const packingData = {
-      "PRODORLAC SPL": [40, 20],
-      "COROMASTIC": [20],
-      "CEMENT PRODOR S POWDER": [50],
-      "CEMENT PRODOR K SOLUTION": [250, 50],
-      "B-100 POWDER": [40],
-      "B-100 SYRUP": [40, 20],
-      "B-100 HARDENER": [1],
-      "COROPHEN POWDER": [40],
-      "COROPHEN SYRUP": [40, 20],
-      "CUMIFURAN POWDER": [40],
-      "CUMIFURAN SYRUP": [40],
-    };
-
     function convertArea(type) {
       const ftInput = document.getElementById('areaFt');
       const mInput = document.getElementById('areaM');
@@ -155,32 +139,6 @@
       const coro = document.getElementById("coromastic").value;
       const thicknessSelect = document.getElementById("coromasticThickness");
       thicknessSelect.style.display = coro === "Yes" ? "inline" : "none";
-    }
-
-    function calculateAdjustedQty(itemName, qty) {
-      const packingSizes = packingData[itemName] || [];
-      const sortedSizes = packingSizes.sort((a, b) => b - a);
-      let remainingQty = qty;
-      let description = "";
-      let adjustedQty = 0;
-
-      sortedSizes.forEach(size => {
-        const count = Math.floor(remainingQty / size);
-        if (count > 0) {
-          description += `${count} ${size > 1 ? 'DRUMS' : 'DRUM'} OF ${size} ${size > 1 ? 'KGS' : 'LTRS'}, `;
-          adjustedQty += count * size;
-          remainingQty %= size;
-        }
-      });
-
-      if (remainingQty > 0) {
-        description += `1 DRUM OF ${remainingQty} ${remainingQty > 1 ? 'KGS' : 'LTRS'}`;
-        adjustedQty += remainingQty;
-      } else {
-        description = description.slice(0, -2);
-      }
-
-      return { adjustedQty, description };
     }
 
     function calculate() {
@@ -199,17 +157,14 @@
       const results = [];
       let serial = 1;
 
-      results.push([serial++, "Number of Tiles", noOfTiles, "Nos", "-", "-"]);
-      if (primer) results.push([serial++, "PRODORLAC SPL", (areaM * 0.3).toFixed(2), "LTR", "-", "-"]);
+      results.push([serial++, "Number of Tiles", noOfTiles, "Nos"]);
+      if (primer) results.push([serial++, "PRODORLAC SPL", (areaM * 0.3).toFixed(2), "LTR"]);
       if (coromastic && coromasticThk > 0) {
-        const qty = (areaM * coromasticThk * 2).toFixed(2);
-        const adjusted = calculateAdjustedQty("COROMASTIC", qty);
-        results.push([serial++, "COROMASTIC", qty, "KGS", adjusted.adjustedQty, adjusted.description]);
+        results.push([serial++, "COROMASTIC", (areaM * coromasticThk * 2).toFixed(2), "KGS"]);
       }
 
       const addItem = (name, qty, uom) => {
-        const adjusted = calculateAdjustedQty(name, qty);
-        results.push([serial++, name, qty.toFixed(2), uom, adjusted.adjustedQty, adjusted.description]);
+        results.push([serial++, name, (areaM * qty).toFixed(2), uom]);
       };
 
       const shared = bedding === jointing;
