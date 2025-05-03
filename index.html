@@ -1,39 +1,48 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REFCO INDIA CORPORATION - Calculator</title>
+  <title>Refco Calculator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      background-color: #f1f1f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .container {
-      max-width: 700px;
-      margin: 40px auto;
-      background: white;
-      padding: 25px 30px;
+      background-color: white;
+      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+      max-width: 700px;
+      width: 100%;
     }
     h1, h2 {
       text-align: center;
     }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .inline-group {
-      display: flex;
-      gap: 10px;
-    }
-    .inline-group > * {
-      flex: 1;
+    label {
+      margin-top: 10px;
+      display: block;
+      font-weight: bold;
     }
     input, select, button {
       width: 100%;
-      padding: 8px;
-      font-size: 14px;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
     }
     table {
       width: 100%;
@@ -41,141 +50,140 @@
       margin-top: 20px;
     }
     th, td {
-      padding: 10px;
       border: 1px solid #ccc;
       text-align: center;
+      padding: 10px;
     }
-    button {
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      border: none;
-      margin-top: 10px;
+    th {
+      background-color: #f0f0f0;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>REFCO INDIA CORPORATION</h1>
-    <h2>ACID RESISTANT MATERIALS CALCULATIONS</h2>
+<div class="container">
+  <h1>REFCO INDIA CORPORATION</h1>
+  <h2>ACID RESISTANT MATERIALS CALCULATIONS</h2>
 
-    <div class="form-group inline-group">
-      <input type="number" id="areaSqFt" placeholder="Area (sq. ft)">
-      <input type="number" id="areaSqM" placeholder="Area (sq. m)">
-    </div>
+  <label for="area">Area (sq.mtr)</label>
+  <input type="number" id="area" placeholder="e.g. 10.76">
 
-    <div class="form-group inline-group">
-      <input type="number" id="tileLength" placeholder="Length (mm)">
-      <input type="number" id="tileBreadth" placeholder="Breadth (mm)">
-      <input type="number" id="tileThickness" placeholder="Thickness (mm)">
-    </div>
+  <label for="tileLength">Tile Length (mm)</label>
+  <input type="number" id="tileLength" placeholder="e.g. 300">
 
-    <div class="form-group inline-group">
-      <select id="primer">
-        <option value="YES">YES</option>
-        <option value="NO">NO</option>
-      </select>
-      <select id="coromastic">
-        <option value="YES">YES</option>
-        <option value="NO">NO</option>
-      </select>
-      <select id="coromasticThickness">
-        <option value="">--SELECT--</option>
-      </select>
-    </div>
+  <label for="tileWidth">Tile Width (mm)</label>
+  <input type="number" id="tileWidth" placeholder="e.g. 300">
 
-    <div class="form-group inline-group">
-      <select id="bedding">
-        <option>SK MORTAR</option>
-        <option>CUMIFURAN</option>
-        <option>COROPHEN</option>
-        <option>B-100</option>
-      </select>
-      <select id="jointing">
-        <option>SK MORTAR</option>
-        <option>CUMIFURAN</option>
-        <option>COROPHEN</option>
-        <option>B-100</option>
-      </select>
-    </div>
+  <label for="tileThk">Tile Thickness (mm)</label>
+  <input type="number" id="tileThk" placeholder="e.g. 20">
 
-    <button onclick="calculate()">CALCULATE</button>
+  <label for="primerRequired">Primer Required?</label>
+  <select id="primerRequired">
+    <option>YES</option>
+    <option>NO</option>
+  </select>
 
-    <table id="resultTable" style="display: none;">
-      <thead>
-        <tr>
-          <th>S. NO</th>
-          <th>ITEM NAME</th>
-          <th>QTY</th>
-          <th>UOM</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <label for="coromasticRequired">Coromastic Required?</label>
+  <select id="coromasticRequired">
+    <option>YES</option>
+    <option>NO</option>
+  </select>
 
-  <script>
-    // Coromastic Thickness Dropdown Options
-    const coromasticThickness = document.getElementById('coromasticThickness');
-    for (let i = 1; i <= 30; i++) {
-      const option = document.createElement("option");
-      option.value = i;
-      option.text = i + " mm";
-      coromasticThickness.appendChild(option);
-    }
+  <label for="coromasticThk">Coromastic Thickness</label>
+  <select id="coromasticThk">
+    <option>10 mm</option>
+    <option>20 mm</option>
+    <option>30 mm</option>
+  </select>
 
-    // Area bi-directional logic
-    const areaSqFt = document.getElementById('areaSqFt');
-    const areaSqM = document.getElementById('areaSqM');
-    let lock = false;
+  <label for="bedding">Bedding Type</label>
+  <select id="bedding">
+    <option>SK MORTAR</option>
+    <option>CUMIFURAN</option>
+    <option>COROPHEN</option>
+    <option>B-100</option>
+  </select>
 
-    areaSqFt.addEventListener('input', () => {
-      if (lock) return;
-      lock = true;
-      areaSqM.value = (areaSqFt.value * 0.092903).toFixed(2);
-      lock = false;
-    });
+  <label for="jointing">Jointing Type</label>
+  <select id="jointing">
+    <option>SK MORTAR</option>
+    <option>CUMIFURAN</option>
+    <option>COROPHEN</option>
+    <option>B-100</option>
+  </select>
 
-    areaSqM.addEventListener('input', () => {
-      if (lock) return;
-      lock = true;
-      areaSqFt.value = (areaSqM.value / 0.092903).toFixed(2);
-      lock = false;
-    });
+  <button onclick="calculate()">CALCULATE</button>
 
-    function calculate() {
-      const primer = document.getElementById('primer').value;
-      const coromastic = document.getElementById('coromastic').value;
-      const coromasticThk = document.getElementById('coromasticThickness').value;
-      const bedding = document.getElementById('bedding').value;
-      const jointing = document.getElementById('jointing').value;
-      const results = [];
+  <table>
+    <thead>
+      <tr>
+        <th>S. NO</th>
+        <th>ITEM NAME</th>
+        <th>QTY</th>
+        <th>UOM</th>
+      </tr>
+    </thead>
+    <tbody id="resultTableBody"></tbody>
+  </table>
+</div>
 
-      let index = 1;
+<script>
+function calculate() {
+  let area = parseFloat(document.getElementById("area").value);
+  let tileLength = parseFloat(document.getElementById("tileLength").value);
+  let tileWidth = parseFloat(document.getElementById("tileWidth").value);
+  let coromasticThk = parseInt(document.getElementById("coromasticThk").value);
+  let primer = document.getElementById("primerRequired").value;
+  let coromastic = document.getElementById("coromasticRequired").value;
+  let bedding = document.getElementById("bedding").value;
+  let jointing = document.getElementById("jointing").value;
 
-      if (primer === 'YES') {
-        results.push({ name: 'PRODORLAC SPL', qty: 0.3, uom: 'LTR' });
-      }
+  let items = [];
 
-      if (coromastic === 'YES' && coromasticThk) {
-        results.push({ name: 'COROMASTIC', qty: Number(coromasticThk), uom: 'KGS' });
-      }
+  let tileArea = (tileLength * tileWidth) / 1000000;
+  let noOfTiles = area / tileArea;
 
-      if (bedding === 'COROPHEN') {
-        results.push({ name: 'COROPHEN POWDER', qty: 2.25, uom: 'KG' });
-        results.push({ name: 'COROPHEN SYRUP', qty: 0.75, uom: 'KG' });
-      }
+  if (primer === "YES") {
+    items.push({ name: "PRODORLAC SPL", qty: (area * 0.3).toFixed(2), uom: "LTR" });
+  }
 
-      const tableBody = document.querySelector('#resultTable tbody');
-      tableBody.innerHTML = '';
-      results.forEach((item, i) => {
-        const row = `<tr><td>${i + 1}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.uom}</td></tr>`;
-        tableBody.innerHTML += row;
-      });
+  if (coromastic === "YES") {
+    items.push({ name: "COROMASTIC", qty: (coromasticThk * 2 * area).toFixed(2), uom: "KGS" });
+  }
 
-      document.getElementById('resultTable').style.display = results.length ? 'table' : 'none';
-    }
-  </script>
+  if (bedding === "SK MORTAR") {
+    items.push({ name: "SK MORTAR POWDER", qty: (15 * area).toFixed(2), uom: "KGS" });
+    items.push({ name: "SK MORTAR K SOLUTION", qty: (5 * area).toFixed(2), uom: "KGS" });
+  } else if (bedding === "CUMIFURAN") {
+    items.push({ name: "CUMIFURAN POWDER", qty: (12 * area).toFixed(2), uom: "KGS" });
+    items.push({ name: "CUMIFURAN SYRUP", qty: (4 * area).toFixed(2), uom: "KGS" });
+  } else if (bedding === "COROPHEN") {
+    items.push({ name: "COROPHEN POWDER", qty: (12 * area).toFixed(2), uom: "KGS" });
+    items.push({ name: "COROPHEN SYRUP", qty: (4 * area).toFixed(2), uom: "KGS" });
+  } else if (bedding === "B-100") {
+    items.push({ name: "B-100 POWDER", qty: (12 * area).toFixed(2), uom: "KGS" });
+    items.push({ name: "B-100 SYRUP", qty: (4 * area).toFixed(2), uom: "KGS" });
+    items.push({ name: "B-100 HARDENER", qty: (0.4 * area).toFixed(2), uom: "KGS" });
+  }
+
+  if (jointing === "CUMIFURAN") {
+    items.push({ name: "CUMIFURAN POWDER", qty: (2.25 * area).toFixed(2), uom: "KGS" });
+    items.push({ name: "CUMIFURAN SYRUP", qty: (0.75 * area).toFixed(2), uom: "KGS" });
+  } else if (jointing === "COROPHEN") {
+    items.push({ name: "COROPHEN POWDER", qty: (2.25 * area).toFixed(2), uom: "KGS" });
+    items.push({ name: "COROPHEN SYRUP", qty: (0.75 * area).toFixed(2), uom: "KGS" });
+  } else if (jointing === "B-100") {
+    items.push({ name: "B-100 POWDER", qty: (2.25 * area).toFixed(2), uom: "KGS" });
+    items.push({ name: "B-100 SYRUP", qty: (0.75 * area).toFixed(2), uom: "KGS" });
+    items.push({ name: "B-100 HARDENER", qty: (0.075 * area).toFixed(2), uom: "KGS" });
+  }
+
+  let table = "";
+  items.forEach((item, index) => {
+    table += `<tr><td>${index + 1}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.uom}</td></tr>`;
+  });
+
+  document.getElementById("resultTableBody").innerHTML = table;
+}
+</script>
 </body>
 </html>
