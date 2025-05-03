@@ -1,124 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Tile Calculator - Refco India</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Refco India Corporation - Tile Calculator</title>
   <style>
-    body { font-family: Arial; max-width: 800px; margin: auto; padding: 20px; }
-    label, select, input { display: block; margin: 10px 0; }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .column { flex: 1; min-width: 180px; }
-    h2 { margin-top: 30px; }
-    .output { background: #f4f4f4; padding: 10px; margin: 10px 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin: 0.5rem 0;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    #calculate {
+      grid-column: span 2;
+      padding: 10px;
+      background-color: #0078D7;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    #results {
+      margin-top: 2rem;
+      background-color: #f1f1f1;
+      padding: 1rem;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
-  <h1>Tile Calculator - Refco India</h1>
+  <div class="container">
+    <h1>REFCO INDIA CORPORATION</h1>
+    <h2>ACID RESISTANT MATERIALS CALCULATIONS</h2>
 
-  <div class="row">
-    <div class="column">
-      <label>Area (sq. ft):</label>
-      <input type="number" id="areaFt" oninput="convertArea('ft')">
-    </div>
-    <div class="column">
-      <label>Area (sq. m):</label>
-      <input type="number" id="areaM" oninput="convertArea('m')">
-    </div>
+    <form id="tileForm">
+      <div>
+        <label>Area (sq. ft):</label>
+        <input type="number" id="areaSqft" step="0.01">
+      </div>
+      <div>
+        <label>Area (sq. m):</label>
+        <input type="number" id="areaSqm" step="0.01">
+      </div>
+
+      <div class="full-width">
+        <label>TILE SIZE - BOX L X BOX B X BOX THK. (MM):</label>
+        <input type="number" placeholder="Length" id="length" style="width: 30%; display: inline-block;">
+        <input type="number" placeholder="Breadth" id="breadth" style="width: 30%; display: inline-block; margin-left: 5px;">
+        <input type="number" placeholder="Thickness" id="thickness" style="width: 30%; display: inline-block; margin-left: 5px;">
+      </div>
+
+      <div>
+        <label>PRIMER REQUIRED:</label>
+        <select id="primer">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+
+      <div>
+        <label>COROMASTIC REQUIRED:</label>
+        <select id="coromastic">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+
+      <div class="full-width" id="coromasticThicknessContainer" style="display: none;">
+        <label>Coromastic Thickness (mm):</label>
+        <input type="number" id="coromasticThickness" min="1" max="30">
+      </div>
+
+      <div>
+        <label>BEDDING:</label>
+        <select id="bedding">
+          <option value="SK MORTAR">SK MORTAR</option>
+          <option value="EPOXY BEDDING">EPOXY BEDDING</option>
+        </select>
+      </div>
+
+      <div>
+        <label>JOINTING:</label>
+        <select id="jointing">
+          <option value="CUMIFURAN">CUMIFURAN</option>
+          <option value="OTHER">OTHER</option>
+        </select>
+      </div>
+
+      <button type="button" id="calculate">Calculate</button>
+    </form>
+
+    <div id="results"></div>
   </div>
-
-  <div class="row">
-    <div class="column">
-      <label>Tile Size (L x B in mm):</label>
-      <input type="number" placeholder="Length" id="tileL">
-      <input type="number" placeholder="Breadth" id="tileB">
-    </div>
-    <div class="column">
-      <label>Primer:</label>
-      <select id="primer"><option>Yes</option><option>No</option></select>
-
-      <label>Coromastic:</label>
-      <select id="coromastic"><option>Yes</option><option>No</option></select>
-      <label>Thickness (mm):</label>
-      <select id="coroThick"></select>
-    </div>
-    <div class="column">
-      <label>Bedding:</label>
-      <select id="bedding">
-        <option>SK MORTAR</option>
-        <option>CUMIFURAN</option>
-        <option>COROPHEN</option>
-        <option>B-100</option>
-      </select>
-
-      <label>Jointing:</label>
-      <select id="jointing">
-        <option>CUMIFURAN</option>
-        <option>COROPHEN</option>
-        <option>B-100</option>
-      </select>
-    </div>
-  </div>
-
-  <button onclick="calculate()">Calculate</button>
-
-  <div id="results" class="output"></div>
 
   <script>
-    // Populate thickness dropdown
-    for (let i = 1; i <= 30; i++) {
-      coroThick.innerHTML += `<option>${i}</option>`;
-    }
+    document.getElementById('coromastic').addEventListener('change', function () {
+      const show = this.value === 'yes';
+      document.getElementById('coromasticThicknessContainer').style.display = show ? 'block' : 'none';
+    });
 
-    function convertArea(type) {
-      let ft = parseFloat(document.getElementById("areaFt").value) || 0;
-      let m = parseFloat(document.getElementById("areaM").value) || 0;
-      if (type === "ft") document.getElementById("areaM").value = (ft * 0.092903).toFixed(2);
-      if (type === "m") document.getElementById("areaFt").value = (m * 10.7639).toFixed(2);
-    }
+    document.getElementById('calculate').addEventListener('click', function () {
+      const areaSqm = parseFloat(document.getElementById('areaSqm').value) || 0;
+      const length = parseFloat(document.getElementById('length').value) || 0;
+      const breadth = parseFloat(document.getElementById('breadth').value) || 0;
 
-    function calculate() {
-      let areaM = parseFloat(document.getElementById("areaM").value) || 0;
-      let tileL = parseFloat(document.getElementById("tileL").value) || 0;
-      let tileB = parseFloat(document.getElementById("tileB").value) || 0;
-      let primer = document.getElementById("primer").value;
-      let coro = document.getElementById("coromastic").value;
-      let thick = parseInt(document.getElementById("coroThick").value);
-      let bedding = document.getElementById("bedding").value;
-      let jointing = document.getElementById("jointing").value;
+      const tileAreaSqm = (length * breadth) / 1000000;
+      const tilesNeeded = tileAreaSqm > 0 ? (areaSqm / tileAreaSqm).toFixed(2) : '0';
 
-      let tileArea = (tileL / 1000) * (tileB / 1000);
-      let numTiles = tileArea ? (areaM / tileArea).toFixed(2) : 0;
+      let result = `<h3>Results</h3>`;
+      result += `<p><strong>Tiles Needed:</strong> ${tilesNeeded}</p>`;
 
-      let result = `
-        <h2>Results</h2>
-        <p><strong>Tiles Needed:</strong> ${numTiles}</p>
-        <p><strong>Prodorlac SPL:</strong> ${(areaM * 0.3).toFixed(2)} Ltr</p>
-      `;
-
-      if (coro === "Yes") {
-        result += `<p><strong>Coromastic:</strong> ${(thick * 2 * areaM).toFixed(2)} Kgs</p>`;
+      if (document.getElementById('primer').value === 'yes') {
+        result += `<p><strong>Prodorlac SPL:</strong> ${(areaSqm * 0.3).toFixed(2)} Ltr</p>`;
       }
 
-      if (bedding === "SK MORTAR") {
-        result += `<p>SK MORTAR - Powder: ${(15 * areaM).toFixed(2)} kg, K Soln: ${(5 * areaM).toFixed(2)} kg</p>`;
-      } else if (bedding === "CUMIFURAN") {
-        result += `<p>CUMIFURAN - Powder: ${(12 * areaM).toFixed(2)} kg, Syrup: ${(4 * areaM).toFixed(2)} kg</p>`;
-      } else if (bedding === "COROPHEN") {
-        result += `<p>COROPHEN - Powder: ${(12 * areaM).toFixed(2)} kg, Syrup: ${(4 * areaM).toFixed(2)} kg</p>`;
-      } else if (bedding === "B-100") {
-        result += `<p>B-100 - Powder: ${(12 * areaM).toFixed(2)} kg, Syrup: ${(4 * areaM).toFixed(2)} kg, Hardener: ${(0.4 * areaM).toFixed(2)} kg</p>`;
+      if (document.getElementById('coromastic').value === 'yes') {
+        const coroThk = parseFloat(document.getElementById('coromasticThickness').value) || 0;
+        result += `<p><strong>Coromastic:</strong> ${(areaSqm * coroThk * 2).toFixed(2)} Kgs</p>`;
       }
 
-      if (jointing === "CUMIFURAN") {
-        result += `<p>CUMIFURAN (Jointing) - Powder: ${(2.25 * areaM).toFixed(2)} kg, Syrup: ${(0.75 * areaM).toFixed(2)} kg</p>`;
-      } else if (jointing === "COROPHEN") {
-        result += `<p>COROPHEN (Jointing) - Powder: ${(2.25 * areaM).toFixed(2)} kg, Syrup: ${(0.75 * areaM).toFixed(2)} kg</p>`;
-      } else if (jointing === "B-100") {
-        result += `<p>B-100 (Jointing) - Powder: ${(2.25 * areaM).toFixed(2)} kg, Syrup: ${(0.75 * areaM).toFixed(2)} kg, Hardener: ${(0.075 * areaM).toFixed(2)} kg</p>`;
+      const bedding = document.getElementById('bedding').value;
+      if (bedding === 'SK MORTAR') {
+        result += `<p><strong>SK MORTAR:</strong> Powder: ${(areaSqm * 15).toFixed(2)} kg, K Soln: ${(areaSqm * 5).toFixed(2)} kg</p>`;
       }
 
-      document.getElementById("results").innerHTML = result;
-    }
+      const jointing = document.getElementById('jointing').value;
+      if (jointing === 'CUMIFURAN') {
+        result += `<p><strong>CUMIFURAN (Jointing):</strong> Powder: ${(areaSqm * 2.25).toFixed(2)} kg, Syrup: ${(areaSqm * 0.75).toFixed(2)} kg</p>`;
+      }
+
+      document.getElementById('results').innerHTML = result;
+    });
   </script>
 </body>
 </html>
